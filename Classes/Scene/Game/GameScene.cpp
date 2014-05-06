@@ -160,7 +160,7 @@ void GameScene::onTouchEnded(Touch* touch, Event* event)
     auto touchEnd = touch->getLocation();
     auto vel = (touchEnd - touchBegan).normalize() * 100 / flickCounter;
     for (auto mana : flyingManas) {
-        if (mana->getBoundingBox().containsPoint(touchBegan)) {
+        if (mana->getBoundingBox().containsPoint(touchBegan) && mana->velocity == Point::ZERO) {
             mana->velocity = vel;
             mana->setScale(1);
             auto reload = Mana::create(mana->home, mana->color);
