@@ -4,6 +4,7 @@ Mana::Mana(Node* home, int color)
 :home(home)
 ,color(color)
 ,lastBurger(-1)
+,velocity(Point::ZERO)
 {
 }
 

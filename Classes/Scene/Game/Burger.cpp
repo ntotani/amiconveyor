@@ -1,5 +1,15 @@
 #include "Burger.h"
 
+Burger::Burger(vector<int> colors, bool isPotato)
+:correctColors(colors)
+,isPotato(isPotato)
+,manas(vector<Mana*>())
+,icons(vector<Sprite*>())
+,popup(nullptr)
+,burgerId(rand())
+{
+};
+
 Burger* Burger::create(vector<int> colors, bool isPotato)
 {
     auto *sprite = new Burger(colors, isPotato);

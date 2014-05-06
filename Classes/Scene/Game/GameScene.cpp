@@ -15,10 +15,28 @@ GameScene::GameScene()
 ,manas(vector<Node*>())
 ,maxHeight(0)
 ,pause(nullptr)
+,rnd(new RandomImpl())
+,score(0)
+,levelCounter(0)
+,flickCounter(0)
+,touchBegan(Point::ZERO)
+,spawnCounter(3)
+,coolDown(0.5f)
+,tutorial(true)
+,ccbAnimationManager(nullptr)
+,flyingManas(list<Mana*>())
+,burgers(list<Burger*>())
+,levels(list<Level>())
+,currentLevel(Level())
 {
     for (int i = 0; i < 8; i++) {
         manas.push_back(nullptr);
     }
+}
+
+GameScene::~GameScene()
+{
+    delete rnd;
 }
 
 Scene* GameScene::createScene()
@@ -42,8 +60,6 @@ bool GameScene::init()
         return false;
     }
 
-    rnd = new RandomImpl();
-    score = 0;
     auto str = FileUtils::getInstance()->getStringFromFile("level.json");
     auto json = Json_create(str.c_str());
     coolDown = Json_getFloat(json, "coolDown", 0.5f);
@@ -60,10 +76,8 @@ bool GameScene::init()
         levels.push_back(l);
         it = it->next;
     }
-    levelCounter = 0;
     checkLevel(0);
     spawnCounter = currentLevel.freq;
-    tutorial = true;
 
     /*
     auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -193,7 +207,6 @@ void GameScene::update(float dt)
             }
         }
         auto b = Burger::create(correctColors, isPotato);
-        b->burgerId = rnd->next();
         auto lane = currentLevel.lane && rnd->next() % 2 == 0 ? laneB : laneA;
         b->setPosition(lane->getPosition());
         addChild(b);

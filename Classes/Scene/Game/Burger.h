@@ -12,7 +12,7 @@ USING_NS_CC_EXT;
 class Burger : public Sprite
 {
 public:
-    Burger(vector<int> colors, bool isPotato):correctColors(colors),isPotato(isPotato){};
+    Burger(vector<int> colors, bool isPotato);
     static Burger* create(vector<int> colors, bool isPotato);
     void addMana(Mana* mana);
     bool validate();

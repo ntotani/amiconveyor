@@ -23,6 +23,14 @@ public:
     float freq;
     bool potato;
     bool lane;
+    Level() {
+        delta = 0;
+        height = 2;
+        speed = 50.0f;
+        freq = 3.0f;
+        potato = false;
+        lane = false;
+    };
 };
 
 class GameScene : public Layer, public CCBMemberVariableAssigner
@@ -53,7 +61,7 @@ public:
     virtual bool init();
     void initManas();
     GameScene();
-    ~GameScene(){};
+    ~GameScene();
     CREATE_FUNC(GameScene);
     bool onTouchBegan(Touch* touch, Event* event);
     void onTouchEnded(Touch* touch, Event* event);
