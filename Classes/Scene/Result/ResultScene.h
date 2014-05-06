@@ -7,7 +7,15 @@ USING_NS_CC;
 
 class ResultScene : public Layer
 {
+    Node* thumbLayer;
+    Node* popupLayer;
+    Sprite* okBtn;
+    Sprite* twBtn;
+    Sprite* fbBtn;
+    bool popupShown;
 public:
+    ResultScene();
+    ~ResultScene();
     static Scene* createScene();
     virtual bool init();
     CREATE_FUNC(ResultScene);
