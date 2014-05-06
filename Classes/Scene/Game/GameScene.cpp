@@ -4,6 +4,7 @@
 #include "cocosbuilder/CCNodeLoaderLibrary.h"
 #include "../Result/ResultScene.h"
 #include "spine/Json.h"
+#include "../Pause/PauseScene.h"
 
 GameScene::GameScene()
 :laneA(nullptr)
@@ -13,6 +14,7 @@ GameScene::GameScene()
 ,scoreLabel(nullptr)
 ,manas(vector<Node*>())
 ,maxHeight(0)
+,pause(nullptr)
 {
     for (int i = 0; i < 8; i++) {
         manas.push_back(nullptr);
@@ -93,6 +95,7 @@ bool GameScene::onAssignCCBMemberVariable(Ref* pTarget, const char* pMemberVaria
         CCB_MEMBERVARIABLEASSIGNER_GLUE(this, StringUtils::format("mana%d", i).c_str(), Node*, manas[i]);
     }
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "scoreLabel", LabelTTF*, scoreLabel);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "pause", Sprite*, pause);
     return true;
 }
 
@@ -123,6 +126,10 @@ bool GameScene::onTouchBegan(Touch *touch, Event *event)
 {
     flickCounter = 0;
     touchBegan = touch->getLocation();
+    if (pause->getBoundingBox().containsPoint(touchBegan)) {
+        Director::getInstance()->pushScene(PauseScene::createScene());
+        return false;
+    }
     for (auto mana : flyingManas) {
         if (mana->velocity.getLengthSq() <= 0 && mana->getBoundingBox().containsPoint(touchBegan)) {
             mana->setScale(1.2);

@@ -475,9 +475,9 @@
 				<key>displayName</key>
 				<string>game_ui_button_pause</string>
 				<key>memberVarAssignmentName</key>
-				<string></string>
+				<string>pause</string>
 				<key>memberVarAssignmentType</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>properties</key>
 				<array>
 					<dict>
@@ -536,6 +536,8 @@
 						</array>
 					</dict>
 				</array>
+				<key>selected</key>
+				<true/>
 			</dict>
 			<dict>
 				<key>baseClass</key>
@@ -1674,8 +1676,6 @@
 						<false/>
 					</dict>
 				</array>
-				<key>selected</key>
-				<true/>
 			</dict>
 		</array>
 		<key>customClass</key>

@@ -95,6 +95,7 @@
 		C6B83C8B18E9B31E00B30719 /* libFlurry_4.4.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C6B83C8A18E9B31E00B30719 /* libFlurry_4.4.0.a */; };
 		C6B83C8F18EB140400B30719 /* LBAnalytics.mm in Sources */ = {isa = PBXBuildFile; fileRef = C6B83C8E18EB140400B30719 /* LBAnalytics.mm */; };
 		C6EA931719161212002C06A8 /* level.json in Resources */ = {isa = PBXBuildFile; fileRef = C6EA931619161212002C06A8 /* level.json */; };
+		C6EA93221918EC91002C06A8 /* PauseScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6EA93201918EC91002C06A8 /* PauseScene.cpp */; };
 		C6F4C9FD18EC7AAE001CE69C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C6F4C9FB18EC7AAE001CE69C /* Icon.png */; };
 		C6F4C9FE18EC7AAE001CE69C /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C6F4C9FC18EC7AAE001CE69C /* Icon@2x.png */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
@@ -365,6 +366,8 @@
 		C6B83C8C18EB136C00B30719 /* LBAnalytics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LBAnalytics.h; path = ../../Classes/Common/LBAnalytics.h; sourceTree = "<group>"; };
 		C6B83C8E18EB140400B30719 /* LBAnalytics.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LBAnalytics.mm; sourceTree = "<group>"; };
 		C6EA931619161212002C06A8 /* level.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = level.json; sourceTree = "<group>"; };
+		C6EA93201918EC91002C06A8 /* PauseScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PauseScene.cpp; sourceTree = "<group>"; };
+		C6EA93211918EC91002C06A8 /* PauseScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PauseScene.h; sourceTree = "<group>"; };
 		C6F4C9FB18EC7AAE001CE69C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		C6F4C9FC18EC7AAE001CE69C /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		D44C620B132DFF330009C878 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
@@ -620,6 +623,7 @@
 			isa = PBXGroup;
 			children = (
 				C67470DA18E45D4F00D1F405 /* Game */,
+				C6EA931F1918EC62002C06A8 /* Pause */,
 				C67470DB18E45D5500D1F405 /* Result */,
 				97366E2A18D06B7D00314E1C /* Title */,
 			);
@@ -740,6 +744,15 @@
 				C6B83C8A18E9B31E00B30719 /* libFlurry_4.4.0.a */,
 			);
 			path = flurry;
+			sourceTree = "<group>";
+		};
+		C6EA931F1918EC62002C06A8 /* Pause */ = {
+			isa = PBXGroup;
+			children = (
+				C6EA93201918EC91002C06A8 /* PauseScene.cpp */,
+				C6EA93211918EC91002C06A8 /* PauseScene.h */,
+			);
+			path = Pause;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -985,6 +998,7 @@
 			files = (
 				C6A3B92A1914E8A200AA5F4F /* Mana.cpp in Sources */,
 				9796BCF418E54C3A0018A9A4 /* GamePlatform.mm in Sources */,
+				C6EA93221918EC91002C06A8 /* PauseScene.cpp in Sources */,
 				97D387FB18D072A80087853C /* RandomImpl.cpp in Sources */,
 				C67470DE18E45D8200D1F405 /* ResultScene.cpp in Sources */,
 				9796BCFD18E56BD10018A9A4 /* Store.mm in Sources */,

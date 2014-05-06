@@ -47,6 +47,7 @@ class GameScene : public Layer, public CCBMemberVariableAssigner
     Sprite* rollerB;
     CCBAnimationManager *ccbAnimationManager;
     int maxHeight;
+    Sprite* pause;
 public:
     static Scene* createScene();
     virtual bool init();
