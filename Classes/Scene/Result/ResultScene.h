@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 
+using namespace std;
 USING_NS_CC;
 
 class ResultScene : public Layer
@@ -13,6 +14,7 @@ class ResultScene : public Layer
     Sprite* twBtn;
     Sprite* fbBtn;
     bool popupShown;
+    string shout;
 public:
     ResultScene();
     ~ResultScene();
@@ -20,6 +22,7 @@ public:
     virtual bool init();
     CREATE_FUNC(ResultScene);
     void onTouchEnded(Touch* touch, Event* event);
+    static void setManas(vector<int> manas);
 };
 
 #endif /* defined(__gsweeper__ResultScene__) */

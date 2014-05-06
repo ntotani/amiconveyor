@@ -8,6 +8,8 @@
 
 USING_NS_CC;
 
+static vector<int> manas;
+
 ResultScene::ResultScene()
 :popupShown(false)
 {
@@ -45,9 +47,22 @@ bool ResultScene::init()
     auto center = Point(vs) / 2;
     auto bg = Sprite::create("img/result_4.png");
     bg->setPosition(center);
-    // burger tower
+    auto burger = Sprite::create("img/game_bread_under.png");
+    burger->setPosition(Point(100, 100));
+    for (int i = 0; i < manas.size(); i++) {
+        auto img = StringUtils::format("img/game_mana_%d.png", manas[i]);
+        auto mana = Sprite::create(img);
+        mana->setPosition(Point(burger->getContentSize()) / 2 + Point(-5, 7 * (i + 1)));
+        burger->addChild(mana);
+        if (i == manas.size() - 1) {
+            auto bread = Sprite::create("img/game_bread.png");
+            bread->setPosition(Point(burger->getContentSize()) / 2 + Point(-5, 7 * (i + 2)));
+            burger->addChild(bread);
+        }
+    }
     thumbLayer = Node::create();
     thumbLayer->addChild(bg);
+    thumbLayer->addChild(burger);
     addChild(thumbLayer);
 
     auto blkout = Sprite::create("img/game_popup_blkout.png");
@@ -64,8 +79,9 @@ bool ResultScene::init()
     auto frame = Scale9Sprite::create("img/game_recipe.png");
     //frame->setContentSize(Size(180, 40));
     //frame->setPosition(btn->getPosition() + Point(-40, 50));
-    frame->setPosition(center - Point(0, 50));
-    auto message = LabelTTF::create("さばー！！", "", 18);
+    frame->setPosition(center - Point(0, 60));
+    shout = "さばー！！";
+    auto message = LabelTTF::create(shout, "", 18);
     message->setColor(Color3B::BLACK);
     message->setPosition(Point(frame->getContentSize()) / 2);
     frame->addChild(message);
@@ -82,8 +98,8 @@ bool ResultScene::init()
     rt->begin();
     thumbLayer->visit();
     rt->end();
-    rt->setScale(0.4f);
-    rt->setPosition(Point(vs) / 2 + Point(0, 30));
+    rt->setScale(0.35f);
+    rt->setPosition(Point(vs) / 2 + Point(0, 40));
     popupLayer->addChild(rt);
     //
     popupLayer->addChild(frame);
@@ -120,9 +136,23 @@ void ResultScene::onTouchEnded(Touch* touch, Event* event)
                 n->setVisible(true);
             }
         }), NULL));
+        return;
     }
     auto p = touch->getLocation();
     if (okBtn->getBoundingBox().containsPoint(p)) {
         Director::getInstance()->replaceScene(GameScene::createScene());
+    } else if (twBtn->getBoundingBox().containsPoint(p)) {
+        AppDelegate::screenShot(thumbLayer, "screenshot.jpg", [&](std::string filePath) {
+            LBSocial::tweet((shout + " http://goo.gl/pd1z0L").c_str(), filePath.c_str());
+        });
+    } else if (fbBtn->getBoundingBox().containsPoint(p)) {
+        AppDelegate::screenShot(thumbLayer, "screenshot.jpg", [&](std::string filePath) {
+            LBSocial::facebook((shout + " http://goo.gl/pd1z0L").c_str(), filePath.c_str());
+        });
     }
+}
+
+void ResultScene::setManas(vector<int> m)
+{
+    manas = m;
 }

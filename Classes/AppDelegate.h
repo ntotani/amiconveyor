@@ -34,7 +34,7 @@ public:
     */
     virtual void applicationWillEnterForeground() override;
     
-    static void screenShot(const char* fileName, std::function<void(std::string)> callback);
+    static void screenShot(cocos2d::Node* node, const char* fileName, std::function<void(std::string)> callback);
     static cocos2d::ui::Button* createButton(const char* img, const char* txt);
 };
 

@@ -3,7 +3,7 @@
 
 void commonShare(const char *message, const char *ssFilePath, NSString* serviceType) {
     SLComposeViewController *cvc = [SLComposeViewController composeViewControllerForServiceType:serviceType];
-    [cvc setInitialText:[NSString stringWithFormat:@"%s", message]];
+    [cvc setInitialText:[NSString stringWithUTF8String:message]];
     [cvc addImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%s", ssFilePath]]];
     [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:cvc animated:YES completion:nil];
 }

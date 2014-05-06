@@ -64,12 +64,12 @@ void AppDelegate::applicationWillEnterForeground() {
 
 static CustomCommand saveToFileCommand;
 
-void AppDelegate::screenShot(const char* fileName, std::function<void(std::string)> callback) {
+void AppDelegate::screenShot(Node* node, const char* fileName, std::function<void(std::string)> callback) {
     auto s = Director::getInstance()->getVisibleSize();
     auto texture = RenderTexture::create(s.width, s.height);
     texture->setPosition(Point(s.width * 0.5f, s.height * 0.5f));
-    texture->beginWithClear(1, 1, 1, 1);
-    Director::getInstance()->getRunningScene()->visit();
+    texture->begin();
+    node->visit();
     texture->end();
     std::string fullpath = LBFileUtils::getCachePath() + fileName;
     saveToFileCommand.init(texture->getGlobalZOrder());

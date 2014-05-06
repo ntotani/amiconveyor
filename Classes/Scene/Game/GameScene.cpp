@@ -12,6 +12,7 @@ GameScene::GameScene()
 ,rollerB(nullptr)
 ,scoreLabel(nullptr)
 ,manas(vector<Node*>())
+,maxHeight(0)
 {
     for (int i = 0; i < 8; i++) {
         manas.push_back(nullptr);
@@ -246,6 +247,10 @@ void GameScene::updateBurgers(float dt)
                 ccbAnimationManager->runAnimationsForSequenceNamed("game");
                 break;
             }
+        }
+        if (burger->manas.size() > maxHeight) {
+            maxHeight = burger->manas.size();
+            ResultScene::setManas(burger->correctColors);
         }
         if (burger->validate()) {
             burger->jet();
