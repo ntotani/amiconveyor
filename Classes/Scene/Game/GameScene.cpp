@@ -268,16 +268,24 @@ void GameScene::updateBurgers(float dt)
                 break;
             }
         }
-        if (burger->manas.size() > maxHeight) {
-            maxHeight = burger->manas.size();
-            ResultScene::setManas(burger->correctColors);
-        }
         if (burger->validate()) {
             burger->jet();
             score++;
             drawScore();
+            if (burger->correctColors.size() > maxHeight) {
+                maxHeight = burger->correctColors.size();
+                ResultScene::setManas(burger->correctColors);
+            }
             it = burgers.erase(it);
         } else if (burger->getBoundingBox().getMaxX() < 0) {
+            if (burger->manas.size() > maxHeight) {
+                maxHeight = burger->manas.size();
+                vector<int> manaColors;
+                for (auto m : burger->manas) {
+                    manaColors.push_back(m->color);
+                }
+                ResultScene::setManas(manaColors);
+            }
             Director::getInstance()->replaceScene(ResultScene::createScene());
             it = burgers.erase(it);
         } else {
