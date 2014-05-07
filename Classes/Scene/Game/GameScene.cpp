@@ -6,6 +6,11 @@
 #include "spine/Json.h"
 #include "../Pause/PauseScene.h"
 
+//#define BGM "sound/Super_Gamer_Boy_offvocal.mp3"
+#define BGM "sound/Vigour.mp3"
+
+using namespace CocosDenshion;
+
 GameScene::GameScene()
 :laneA(nullptr)
 ,laneB(nullptr)
@@ -37,6 +42,10 @@ GameScene::GameScene()
 GameScene::~GameScene()
 {
     delete rnd;
+    SimpleAudioEngine::getInstance()->unloadEffect("sound/se_flick.mp3");
+    SimpleAudioEngine::getInstance()->unloadEffect("sound/se_ng.mp3");
+    SimpleAudioEngine::getInstance()->unloadEffect("sound/se_ob.mp3");
+    SimpleAudioEngine::getInstance()->unloadEffect("sound/se_ok.mp3");
 }
 
 Scene* GameScene::createScene()
@@ -59,6 +68,11 @@ bool GameScene::init()
     {
         return false;
     }
+    SimpleAudioEngine::getInstance()->preloadBackgroundMusic(BGM);
+    SimpleAudioEngine::getInstance()->preloadEffect("sound/se_flick.mp3");
+    SimpleAudioEngine::getInstance()->preloadEffect("sound/se_ng.mp3");
+    SimpleAudioEngine::getInstance()->preloadEffect("sound/se_ob.mp3");
+    SimpleAudioEngine::getInstance()->preloadEffect("sound/se_ok.mp3");
 
     auto str = FileUtils::getInstance()->getStringFromFile("level.json");
     auto json = Json_create(str.c_str());
@@ -79,15 +93,6 @@ bool GameScene::init()
     checkLevel(0);
     spawnCounter = currentLevel.freq;
 
-    /*
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    auto origin = Director::getInstance()->getVisibleOrigin();
-
-    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-    audio->preloadEffect("sound/se_coin.mp3");
-    audio->preloadEffect("sound/se_ob.mp3");
-     */
-
     auto dispatcher = Director::getInstance()->getEventDispatcher();
     auto listener = EventListenerTouchOneByOne::create();
     listener->onTouchBegan = CC_CALLBACK_2(GameScene::onTouchBegan, this);
@@ -95,6 +100,7 @@ bool GameScene::init()
     listener->onTouchEnded = CC_CALLBACK_2(GameScene::onTouchEnded, this);
     listener->onTouchCancelled = [](Touch* touch, Event* event) {};
     dispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
     scheduleUpdate();
     return true;
 }
@@ -166,6 +172,7 @@ void GameScene::onTouchEnded(Touch* touch, Event* event)
             auto reload = Mana::create(mana->home, mana->color);
             spawnMana(reload);
             addChild(reload);
+            SimpleAudioEngine::getInstance()->playEffect("sound/se_flick.mp3");
             return;
         }
     }
@@ -178,6 +185,8 @@ void GameScene::onTouchEnded(Touch* touch, Event* event)
             mana->setPosition(touchBegan);
             mana->velocity = vel;
             flyingManas.push_back(mana);
+            SimpleAudioEngine::getInstance()->playEffect("sound/se_flick.mp3");
+            break;
         }
     }
 }
@@ -243,6 +252,7 @@ void GameScene::updateManas(float dt)
         e->setPosition(e->getPosition() + e->velocity * dt);
         if (!getBoundingBox().intersectsRect(e->getBoundingBox())) {
             e->removeFromParent();
+            SimpleAudioEngine::getInstance()->playEffect("sound/se_ob.mp3");
             it = flyingManas.erase(it);
         } else {
             it++;
@@ -261,10 +271,14 @@ void GameScene::updateBurgers(float dt)
         for (auto itt = flyingManas.begin(); itt != flyingManas.end(); itt++) {
             auto fm = *itt;
             if (fm->getBoundingBox().intersectsRect(burger->getBoundingBox()) && fm->lastBurger != burger->burgerId) {
-                burger->addMana(fm);
+                bool ok = burger->addMana(fm);
+                SimpleAudioEngine::getInstance()->playEffect(StringUtils::format("sound/se_%s.mp3", ok ? "ok" : "ng").c_str());
                 flyingManas.erase(itt);
+                if (tutorial) {
+                    SimpleAudioEngine::getInstance()->playBackgroundMusic(BGM, true);
+                    ccbAnimationManager->runAnimationsForSequenceNamed("game");
+                }
                 tutorial = false;
-                ccbAnimationManager->runAnimationsForSequenceNamed("game");
                 break;
             }
         }
