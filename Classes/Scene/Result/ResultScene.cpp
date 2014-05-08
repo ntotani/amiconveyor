@@ -5,8 +5,10 @@
 #include "../../Common/LBSocial.h"
 #include "../../Common/LBAnalytics.h"
 #include "../Game/GameScene.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
+using namespace CocosDenshion;
 
 static vector<int> manas;
 
@@ -43,6 +45,8 @@ bool ResultScene::init()
     {
         return false;
     }
+    SimpleAudioEngine::getInstance()->playBackgroundMusic("sound/all_right!.mp3");
+
     auto vs = Director::getInstance()->getVisibleSize();
     auto center = Point(vs) / 2;
     auto bg = Sprite::create("img/result_4.png");

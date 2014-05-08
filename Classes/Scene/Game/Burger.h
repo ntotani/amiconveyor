@@ -14,7 +14,7 @@ class Burger : public Sprite
 public:
     Burger(vector<int> colors, bool isPotato);
     static Burger* create(vector<int> colors, bool isPotato);
-    void addMana(Mana* mana);
+    bool addMana(Mana* mana);
     bool validate();
     void jet();
     Point nextPoint();

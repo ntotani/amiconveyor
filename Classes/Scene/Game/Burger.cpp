@@ -65,17 +65,20 @@ Burger* Burger::create(vector<int> colors, bool isPotato)
     return nullptr;
 }
 
-void Burger::addMana(Mana *mana)
+bool Burger::addMana(Mana *mana)
 {
+    bool ok = false;
     manas.push_back(mana);
     if (isPotato) {
         drawPotatoCount();
         mana->setPosition(Point(62.0f * rand() / RAND_MAX, 49.0f * rand() / RAND_MAX));
+        ok = mana->color == 6 && manas.size() <= correctColors.size();
     } else {
         int idx = manas.size() - 1;
         if (idx < icons.size()) {
             auto icon = icons[idx];
-            auto mark = Sprite::create(StringUtils::format("img/game_icon_%s.png", correctColors[idx] == mana->color ? "good" : "bad"));
+            ok = correctColors[idx] == mana->color;
+            auto mark = Sprite::create(StringUtils::format("img/game_icon_%s.png", ok ? "good" : "bad"));
             mark->setPosition(Point(icon->getContentSize()) / 2);
             icon->addChild(mark);
         }
@@ -87,6 +90,7 @@ void Burger::addMana(Mana *mana)
     addChild(mana);
     mana->release();
     mana->lastBurger = burgerId;
+    return ok;
 }
 
 void Burger::drawPotatoCount()
