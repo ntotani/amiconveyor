@@ -90,6 +90,7 @@ bool Burger::addMana(Mana *mana)
     addChild(mana);
     mana->release();
     mana->lastBurger = burgerId;
+    mana->setLocalZOrder(0);
     return ok;
 }
 

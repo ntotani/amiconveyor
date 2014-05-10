@@ -123,13 +123,12 @@ void GameScene::initManas()
 {
     for (int i = 0; i < manas.size(); i++) {
         auto mana = Mana::create(manas[i], i);
-        auto to = manas[i]->getPosition();
-        mana->setPosition(to + Point(0, -300));
-        mana->runAction(Sequence::create(MoveTo::create(1, to), CallFuncN::create([&](Node* n) {
+        mana->setPosition(0, -300);
+        mana->runAction(Sequence::create(MoveTo::create(1, Point::ZERO), CallFuncN::create([&](Node* n) {
             auto m = static_cast<Mana*>(n);
             flyingManas.push_back(m);
         }), NULL));
-        addChild(mana);
+        manas[i]->addChild(mana);
     }
     drawScore();
 
@@ -151,7 +150,7 @@ bool GameScene::onTouchBegan(Touch *touch, Event *event)
         return false;
     }
     for (auto mana : flyingManas) {
-        if (mana->velocity.getLengthSq() <= 0 && mana->getBoundingBox().containsPoint(touchBegan)) {
+        if (mana->velocity.getLengthSq() <= 0 && mana->getBoundingBox().containsPoint(touchBegan - mana->home->getPosition())) {
             mana->setScale(1.2);
         }
     }
@@ -166,12 +165,17 @@ void GameScene::onTouchEnded(Touch* touch, Event* event)
     auto touchEnd = touch->getLocation();
     auto vel = (touchEnd - touchBegan).normalize() * 100 / flickCounter;
     for (auto mana : flyingManas) {
-        if (mana->getBoundingBox().containsPoint(touchBegan) && mana->velocity == Point::ZERO) {
+        if (mana->getBoundingBox().containsPoint(touchBegan - mana->home->getPosition()) && mana->velocity == Point::ZERO) {
             mana->velocity = vel;
             mana->setScale(1);
+            mana->setPosition(mana->home->getPosition());
+            mana->retain();
+            mana->removeFromParent();
+            addChild(mana, 100);
+            mana->release();
             auto reload = Mana::create(mana->home, mana->color);
             spawnMana(reload);
-            addChild(reload);
+            mana->home->addChild(reload);
             SimpleAudioEngine::getInstance()->playEffect("sound/se_flick.mp3");
             return;
         }
@@ -324,7 +328,7 @@ void GameScene::spawnMana(Mana *e)
         flyingManas.push_back(mana);
     }), NULL));
      */
-    e->setPosition(e->home->getPosition());
+    //e->setPosition(e->home->getPosition());
     e->velocity = Point::ZERO;
     flyingManas.push_back(e);
 }
