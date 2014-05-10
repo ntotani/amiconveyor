@@ -220,6 +220,11 @@ void GameScene::update(float dt)
         b->setPosition(lane->getPosition());
         addChild(b);
         burgers.push_back(b);
+        int order = burgers.size();
+        for (auto bb : burgers) {
+            bb->setLocalZOrder(order);
+            order--;
+        }
     }
     rollerA->setRotation(rollerA->getRotation() - 2 * currentLevel.speed * dt);
     if (currentLevel.lane) {
