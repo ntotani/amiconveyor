@@ -1,5 +1,7 @@
 #include "Mana.h"
 
+#define MANA_LEN 70
+
 Mana::Mana(Node* home, int color)
 :home(home)
 ,color(color)
@@ -20,4 +22,9 @@ Mana* Mana::create(Node* home, int color)
     }
     CC_SAFE_DELETE(sprite);
     return nullptr;
+}
+
+Rect Mana::getBound() const
+{
+    return Rect(getPositionX() - MANA_LEN / 2, getPositionY() - MANA_LEN / 2, MANA_LEN, MANA_LEN);
 }

@@ -182,3 +182,10 @@ Point Burger::nextPoint()
     auto len = isPotato ? 2 : manas.size();
     return Point(getContentSize()) / 2 + Point(-5, 7 * len);
 }
+
+Rect Burger::getBound() const
+{
+    auto len = isPotato ? 2 : manas.size();
+    auto bb = getBoundingBox();
+    return Rect(bb.getMinX(), bb.getMinY(), bb.size.width, bb.size.height + len * 7);
+}

@@ -11,6 +11,7 @@ class Mana : public Sprite
 public:
     Mana(Node* home, int color);
     static Mana* create(Node* home, int color);
+    Rect getBound() const;
 
     Point velocity;
     Node* home;

@@ -150,8 +150,9 @@ bool GameScene::onTouchBegan(Touch *touch, Event *event)
         return false;
     }
     for (auto mana : flyingManas) {
-        if (mana->velocity.getLengthSq() <= 0 && mana->getBoundingBox().containsPoint(touchBegan - mana->home->getPosition())) {
+        if (mana->velocity.getLengthSq() <= 0 && mana->getBound().containsPoint(touchBegan - mana->home->getPosition())) {
             mana->setScale(1.2);
+            break;
         }
     }
     return true;
@@ -168,7 +169,7 @@ void GameScene::onTouchEnded(Touch* touch, Event* event)
     auto l = ab.getLength();
     auto vel = dir * 100 / flickCounter;
     for (auto mana : flyingManas) {
-        if (mana->getBoundingBox().containsPoint(touchBegan - mana->home->getPosition()) && mana->velocity == Point::ZERO) {
+        if (mana->getBound().containsPoint(touchBegan - mana->home->getPosition()) && mana->velocity == Point::ZERO) {
 
             float minH = 10000;
             for (auto b : burgers) {
@@ -195,7 +196,7 @@ void GameScene::onTouchEnded(Touch* touch, Event* event)
         }
     }
     for (auto b : burgers) {
-        if (b->getBoundingBox().containsPoint(touchBegan)) {
+        if (b->getBound().containsPoint(touchBegan)) {
             if (b->manas.empty()) {
                 continue;
             }
@@ -304,7 +305,7 @@ void GameScene::updateBurgers(float dt)
         }
         for (auto itt = flyingManas.begin(); itt != flyingManas.end(); itt++) {
             auto fm = *itt;
-            if (fm->getBoundingBox().intersectsRect(burger->getBoundingBox()) && fm->lastBurger != burger->burgerId && (fm->prefBurger == -1 || fm->prefBurger == burger->burgerId)) {
+            if (fm->getBoundingBox().intersectsRect(burger->getBound()) && fm->lastBurger != burger->burgerId && (fm->prefBurger == -1 || fm->prefBurger == burger->burgerId)) {
                 bool ok = burger->addMana(fm);
                 SimpleAudioEngine::getInstance()->playEffect(StringUtils::format("sound/se_%s.mp3", ok ? "ok" : "ng").c_str());
                 flyingManas.erase(itt);

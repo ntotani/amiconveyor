@@ -20,6 +20,7 @@ public:
     Point nextPoint();
     Mana* popMana(Node* parent);
     void drawPotatoCount();
+    Rect getBound() const;
 
     vector<Mana*> manas;
     vector<int> correctColors;
