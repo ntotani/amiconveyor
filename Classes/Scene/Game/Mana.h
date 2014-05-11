@@ -16,6 +16,7 @@ public:
     Node* home;
     int color;
     int lastBurger;
+    int prefBurger;
 };
 
 #endif /* defined(__leadblow__Mana__) */

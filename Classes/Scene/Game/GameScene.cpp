@@ -163,9 +163,23 @@ void GameScene::onTouchEnded(Touch* touch, Event* event)
         flickCounter = 0.1f;
     }
     auto touchEnd = touch->getLocation();
-    auto vel = (touchEnd - touchBegan).normalize() * 100 / flickCounter;
+    auto dir = (touchEnd - touchBegan).normalize();
+    auto ab = dir * 1000;
+    auto l = ab.getLength();
+    auto vel = dir * 100 / flickCounter;
     for (auto mana : flyingManas) {
         if (mana->getBoundingBox().containsPoint(touchBegan - mana->home->getPosition()) && mana->velocity == Point::ZERO) {
+
+            float minH = 10000;
+            for (auto b : burgers) {
+                auto ap = b->getPosition() - touchBegan;
+                auto h = abs(ab.cross(ap) / l);
+                if (h < minH) {
+                    minH = h;
+                    mana->prefBurger = b->burgerId;
+                }
+            }
+
             mana->velocity = vel;
             mana->setScale(1);
             mana->setPosition(mana->home->getPosition());
@@ -188,6 +202,17 @@ void GameScene::onTouchEnded(Touch* touch, Event* event)
             auto mana = b->popMana(this);
             mana->setPosition(touchBegan);
             mana->velocity = vel;
+
+            float minH = 10000;
+            for (auto bb : burgers) {
+                auto ap = bb->getPosition() - touchBegan;
+                auto h = abs(ab.cross(ap) / l);
+                if (h < minH && bb->burgerId != b->burgerId) {
+                    minH = h;
+                    mana->prefBurger = bb->burgerId;
+                }
+            }
+
             flyingManas.push_back(mana);
             SimpleAudioEngine::getInstance()->playEffect("sound/se_flick.mp3");
             break;
@@ -279,7 +304,7 @@ void GameScene::updateBurgers(float dt)
         }
         for (auto itt = flyingManas.begin(); itt != flyingManas.end(); itt++) {
             auto fm = *itt;
-            if (fm->getBoundingBox().intersectsRect(burger->getBoundingBox()) && fm->lastBurger != burger->burgerId) {
+            if (fm->getBoundingBox().intersectsRect(burger->getBoundingBox()) && fm->lastBurger != burger->burgerId && (fm->prefBurger == -1 || fm->prefBurger == burger->burgerId)) {
                 bool ok = burger->addMana(fm);
                 SimpleAudioEngine::getInstance()->playEffect(StringUtils::format("sound/se_%s.mp3", ok ? "ok" : "ng").c_str());
                 flyingManas.erase(itt);

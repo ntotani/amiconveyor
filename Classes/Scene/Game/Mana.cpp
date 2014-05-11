@@ -5,6 +5,7 @@ Mana::Mana(Node* home, int color)
 ,color(color)
 ,lastBurger(-1)
 ,velocity(Point::ZERO)
+,prefBurger(-1)
 {
 }
 
