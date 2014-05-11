@@ -68,6 +68,7 @@ static AppDelegate s_sharedApplication;
 #endif
     [bannerView_ loadRequest:request];
 
+    /*
     GKLocalPlayer *player = [GKLocalPlayer localPlayer];
     player.authenticateHandler = ^(UIViewController* ui, NSError* error)
     {
@@ -76,6 +77,7 @@ static AppDelegate s_sharedApplication;
             [viewController presentViewController:ui animated:YES completion:nil];
         }
     };
+     */
 
     cocos2d::Application::getInstance()->run();
     return YES;
