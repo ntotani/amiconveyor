@@ -45,14 +45,34 @@ bool ResultScene::init()
     {
         return false;
     }
+    vector<pair<string, string>> voiceLib = {
+        pair<string, string>("fueen", "ふえーん！"),
+        pair<string, string>("hiddoi", "ひっどーい！"),
+        pair<string, string>("hiddooi", "ひっどーい！"),
+        pair<string, string>("kyaa", "きゃー！"),
+        pair<string, string>("shinjirannai", "しんじらんな~い！"),
+        pair<string, string>("usonaki", "あーんあーんあーん！"),
+        pair<string, string>("uwaaan", "うわーん！"),
+        pair<string, string>("puhaa", "ぷはー")
+    };
+    auto voiceId = rand() % voiceLib.size();
+    auto voice = voiceLib[voiceId];
+    auto voicePath = "sound/voice_" + voice.first + ".wav";
+    SimpleAudioEngine::getInstance()->preloadBackgroundMusic(voicePath.c_str());
     SimpleAudioEngine::getInstance()->playBackgroundMusic("sound/all_right!.mp3");
+    runAction(Sequence::create(DelayTime::create(3.5), CallFunc::create([voicePath]() {
+        SimpleAudioEngine::getInstance()->playEffect(voicePath.c_str());
+    }), NULL));
 
     auto vs = Director::getInstance()->getVisibleSize();
     auto center = Point(vs) / 2;
-    auto bg = Sprite::create("img/result_4.png");
+    auto bgId = voiceId == 7 ? 2 : (rand() % 7) + 1;
+    if (voiceId != 7 && bgId == 2) { bgId = 3; }
+    auto bg = Sprite::create(StringUtils::format("img/result_%d.png", bgId));
     bg->setPosition(center);
     auto burger = Sprite::create("img/game_bread_under.png");
     burger->setPosition(Point(100, 100));
+    burger->setRotation(-10);
     for (int i = 0; i < manas.size(); i++) {
         auto img = StringUtils::format("img/game_mana_%d.png", manas[i]);
         auto mana = Sprite::create(img);
@@ -84,7 +104,7 @@ bool ResultScene::init()
     //frame->setContentSize(Size(180, 40));
     //frame->setPosition(btn->getPosition() + Point(-40, 50));
     frame->setPosition(center - Point(0, 60));
-    shout = "さばー！！";
+    shout = voice.second;
     auto message = LabelTTF::create(shout, "", 18);
     message->setColor(Color3B::BLACK);
     message->setPosition(Point(frame->getContentSize()) / 2);
