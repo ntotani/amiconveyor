@@ -821,7 +821,7 @@
 												<key>value</key>
 												<array>
 													<string>onFacebook</string>
-													<integer>0</integer>
+													<integer>1</integer>
 												</array>
 											</dict>
 											<dict>
@@ -934,7 +934,7 @@
 												<key>value</key>
 												<array>
 													<string>onTwitter</string>
-													<integer>0</integer>
+													<integer>1</integer>
 												</array>
 											</dict>
 											<dict>
@@ -1124,7 +1124,7 @@
 										<key>value</key>
 										<array>
 											<string>onOk</string>
-											<integer>0</integer>
+											<integer>1</integer>
 											<integer>32</integer>
 										</array>
 									</dict>
@@ -1264,6 +1264,8 @@
 										</array>
 									</dict>
 								</array>
+								<key>selected</key>
+								<true/>
 							</dict>
 						</array>
 						<key>customClass</key>

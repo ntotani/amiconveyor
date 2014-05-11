@@ -8,14 +8,15 @@
 
 //#define BGM "sound/Super_Gamer_Boy_offvocal.mp3"
 #define BGM "sound/Vigour.mp3"
+#define HIGH_SCORE "highScore"
 
 using namespace CocosDenshion;
 
 GameScene::GameScene()
 :laneA(nullptr)
 ,laneB(nullptr)
-,rollerA(nullptr)
-,rollerB(nullptr)
+,rollersA(vector<Sprite*>())
+,rollersB(vector<Sprite*>())
 ,scoreLabel(nullptr)
 ,manas(vector<Node*>())
 ,maxHeight(0)
@@ -35,9 +36,15 @@ GameScene::GameScene()
 ,currentLevel(Level())
 ,pausing(false)
 ,pauseSmoke(nullptr)
+,highScore(0)
+,highScoreLabel(nullptr)
 {
     for (int i = 0; i < 8; i++) {
         manas.push_back(nullptr);
+    }
+    for (int i = 0; i < 4; i++) {
+        rollersA.push_back(nullptr);
+        rollersB.push_back(nullptr);
     }
 }
 
@@ -111,14 +118,17 @@ bool GameScene::onAssignCCBMemberVariable(Ref* pTarget, const char* pMemberVaria
 {
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "laneA", Node*, laneA);
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "laneB", Node*, laneB);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "rollerA", Sprite*, rollerA);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "rollerB", Sprite*, rollerB);
     for (int i = 0; i < 8; i++) {
         CCB_MEMBERVARIABLEASSIGNER_GLUE(this, StringUtils::format("mana%d", i).c_str(), Node*, manas[i]);
+    }
+    for (int i = 0; i < 4; i++) {
+        CCB_MEMBERVARIABLEASSIGNER_GLUE(this, StringUtils::format("rollerA%d", i).c_str(), Sprite*, rollersA[i]);
+        CCB_MEMBERVARIABLEASSIGNER_GLUE(this, StringUtils::format("rollerB%d", i).c_str(), Sprite*, rollersB[i]);
     }
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "scoreLabel", LabelTTF*, scoreLabel);
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "pause", Sprite*, pause);
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "pauseSmoke", Sprite*, pauseSmoke);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "highScoreLabel", LabelTTF*, highScoreLabel);
     return true;
 }
 
@@ -167,6 +177,8 @@ void GameScene::initManas()
     b->setPositionX(Director::getInstance()->getVisibleSize().width / 2);
     addChild(b);
     burgers.push_back(b);
+    highScore = UserDefault::getInstance()->getIntegerForKey(HIGH_SCORE, 0);
+    highScoreLabel->setString(StringUtils::format("%04d", highScore));
 }
 
 bool GameScene::onTouchBegan(Touch *touch, Event *event)
@@ -292,9 +304,13 @@ void GameScene::update(float dt)
             order--;
         }
     }
-    rollerA->setRotation(rollerA->getRotation() - 2 * currentLevel.speed * dt);
+    for (auto r : rollersA) {
+        r->setRotation(r->getRotation() - 2 * currentLevel.speed * dt);
+    }
     if (currentLevel.lane) {
-        rollerB->setRotation(rollerB->getRotation() - 2 * currentLevel.speed * dt);
+        for (auto r : rollersB) {
+            r->setRotation(r->getRotation() - 2 * currentLevel.speed * dt);
+        }
     }
 }
 
@@ -370,6 +386,10 @@ void GameScene::updateBurgers(float dt)
                     manaColors.push_back(m->color);
                 }
                 ResultScene::setManas(manaColors);
+            }
+            if (score > highScore) {
+                UserDefault::getInstance()->setIntegerForKey(HIGH_SCORE, score);
+                UserDefault::getInstance()->flush();
             }
             Director::getInstance()->replaceScene(ResultScene::createScene());
             it = burgers.erase(it);

@@ -53,13 +53,15 @@ class GameScene : public Layer, public CCBMemberVariableAssigner, public CCBSele
     Level currentLevel;
     float coolDown;
     bool tutorial;
-    Sprite* rollerA;
-    Sprite* rollerB;
     CCBAnimationManager *ccbAnimationManager;
     int maxHeight;
     Sprite* pause;
     bool pausing;
     Sprite* pauseSmoke;
+    int highScore;
+    LabelTTF* highScoreLabel;
+    vector<Sprite*> rollersA;
+    vector<Sprite*> rollersB;
 public:
     static Scene* createScene();
     virtual bool init();

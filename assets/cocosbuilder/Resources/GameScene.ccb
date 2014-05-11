@@ -187,7 +187,7 @@
 				<key>displayName</key>
 				<string>game_roller</string>
 				<key>memberVarAssignmentName</key>
-				<string>rollerA</string>
+				<string>rollerA0</string>
 				<key>memberVarAssignmentType</key>
 				<integer>1</integer>
 				<key>properties</key>
@@ -259,7 +259,7 @@
 				<key>displayName</key>
 				<string>game_roller</string>
 				<key>memberVarAssignmentName</key>
-				<string>rollerA</string>
+				<string>rollerA1</string>
 				<key>memberVarAssignmentType</key>
 				<integer>1</integer>
 				<key>properties</key>
@@ -331,7 +331,7 @@
 				<key>displayName</key>
 				<string>game_roller</string>
 				<key>memberVarAssignmentName</key>
-				<string>rollerA</string>
+				<string>rollerA2</string>
 				<key>memberVarAssignmentType</key>
 				<integer>1</integer>
 				<key>properties</key>
@@ -403,7 +403,7 @@
 				<key>displayName</key>
 				<string>game_roller</string>
 				<key>memberVarAssignmentName</key>
-				<string>rollerA</string>
+				<string>rollerA3</string>
 				<key>memberVarAssignmentType</key>
 				<integer>1</integer>
 				<key>properties</key>
@@ -547,7 +547,7 @@
 				<key>displayName</key>
 				<string>game_roller</string>
 				<key>memberVarAssignmentName</key>
-				<string>rollerB</string>
+				<string>rollerB0</string>
 				<key>memberVarAssignmentType</key>
 				<integer>1</integer>
 				<key>properties</key>
@@ -619,7 +619,7 @@
 				<key>displayName</key>
 				<string>game_roller</string>
 				<key>memberVarAssignmentName</key>
-				<string>rollerB</string>
+				<string>rollerB1</string>
 				<key>memberVarAssignmentType</key>
 				<integer>1</integer>
 				<key>properties</key>
@@ -691,7 +691,7 @@
 				<key>displayName</key>
 				<string>game_roller</string>
 				<key>memberVarAssignmentName</key>
-				<string>rollerB</string>
+				<string>rollerB2</string>
 				<key>memberVarAssignmentType</key>
 				<integer>1</integer>
 				<key>properties</key>
@@ -763,7 +763,7 @@
 				<key>displayName</key>
 				<string>game_roller</string>
 				<key>memberVarAssignmentName</key>
-				<string>rollerB</string>
+				<string>rollerB3</string>
 				<key>memberVarAssignmentType</key>
 				<integer>1</integer>
 				<key>properties</key>
@@ -1179,7 +1179,7 @@
 				<key>displayName</key>
 				<string>scoreLabel</string>
 				<key>memberVarAssignmentName</key>
-				<string>scoreLabel</string>
+				<string>highScoreLabel</string>
 				<key>memberVarAssignmentType</key>
 				<integer>1</integer>
 				<key>properties</key>

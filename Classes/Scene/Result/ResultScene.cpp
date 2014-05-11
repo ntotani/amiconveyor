@@ -107,7 +107,7 @@ void ResultScene::initAfter(CCBAnimationManager* a)
 
 void ResultScene::onTouchEnded(Touch* touch, Event* event)
 {
-    if (!popupShown) {
+    if (!popupShown && ccbAnimationManager->getRunningSequenceName() != "popup") {
         popupShown = true;
         ccbAnimationManager->runAnimationsForSequenceNamed("popup");
     }
