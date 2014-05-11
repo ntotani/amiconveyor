@@ -6,16 +6,16 @@
               {"delta":16, "height":3, "speed":30, "freq":3},
               {"delta":20, "lane":1},
               {"delta":32, "height":3, "speed":20, "freq":3},
-              {"delta":40, "potato":1},
+              {"delta":40, "potato":5},
               {"delta":48, "height":2, "speed":10, "freq":7},
               {"delta":56, "lane":1},
-              {"delta":64, "height":10, "speed":10, "freq":15, "potato":1},
+              {"delta":64, "height":10, "speed":10, "freq":15, "potato":5},
               {"delta":80, "height":3, "speed":20, "freq":5},
-              {"delta":88, "lane":1, "potato":1},
-              {"delta":90, "height":5, "speed":20, "freq":5, "potato":1},
+              {"delta":88, "lane":1, "potato":10},
+              {"delta":90, "height":5, "speed":20, "freq":5, "potato":10},
               {"delta":98, "height":2, "speed":40, "freq":2},
               {"delta":110, "lane":1},
               {"delta":118, "height":10, "speed":10, "freq":15},
-              {"delta":130, "lane":1, "potato":1}
+              {"delta":130, "lane":1, "potato":15}
     ]
 }
