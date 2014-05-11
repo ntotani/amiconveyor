@@ -85,7 +85,7 @@ bool GameScene::init()
         l.height = Json_getInt(it, "height", -1);
         l.speed = Json_getFloat(it, "speed", -1);
         l.freq = Json_getFloat(it, "freq", -1);
-        l.potato = Json_getInt(it, "potato", 0);
+        l.potatoNum = Json_getInt(it, "potato", 0);
         l.lane = Json_getInt(it, "lane", 0);
         levels.push_back(l);
         it = it->next;
@@ -209,9 +209,9 @@ void GameScene::update(float dt)
         spawnCounter = currentLevel.freq;
         vector<int> correctColors;
         bool isPotato = false;
-        if (currentLevel.potato && rnd->next() % 8 == 6) {
+        if (currentLevel.potatoNum > 0 && rnd->next() % 8 == 6) {
             isPotato = true;
-            for (int i = 0; i < currentLevel.height; i++) {
+            for (int i = 0; i < currentLevel.potatoNum; i++) {
                 correctColors.push_back(6);
             }
         } else {
@@ -248,7 +248,7 @@ void GameScene::checkLevel(float dt)
         currentLevel.height = nextLevel.height != -1 ? nextLevel.height : currentLevel.height;
         currentLevel.speed = nextLevel.speed != -1 ? nextLevel.speed : currentLevel.speed;
         currentLevel.freq = nextLevel.freq != -1 ? nextLevel.freq : currentLevel.freq;
-        currentLevel.potato |= nextLevel.potato;
+        currentLevel.potatoNum = nextLevel.potatoNum > 0 ? nextLevel.potatoNum : currentLevel.potatoNum;
         currentLevel.lane |= nextLevel.lane;
         levels.pop_front();
     }

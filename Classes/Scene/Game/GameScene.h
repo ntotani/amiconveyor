@@ -21,14 +21,14 @@ public:
     int height;
     float speed;
     float freq;
-    bool potato;
+    int potatoNum;
     bool lane;
     Level() {
         delta = 0;
         height = 2;
         speed = 50.0f;
         freq = 3.0f;
-        potato = false;
+        potatoNum = 0;
         lane = false;
     };
 };
