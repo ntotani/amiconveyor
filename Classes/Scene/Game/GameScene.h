@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "cocosbuilder/CCLayerLoader.h"
+#include "cocosbuilder/CCBSelectorResolver.h"
 #include "cocosbuilder/CCBMemberVariableAssigner.h"
 #include "cocosbuilder/CCBAnimationManager.h"
 #include "UIButton.h"
@@ -12,6 +13,7 @@
 
 using namespace std;
 USING_NS_CC;
+USING_NS_CC_EXT;
 using namespace cocosbuilder;
 
 class Level
@@ -33,7 +35,7 @@ public:
     };
 };
 
-class GameScene : public Layer, public CCBMemberVariableAssigner
+class GameScene : public Layer, public CCBMemberVariableAssigner, public CCBSelectorResolver
 {
     Node* laneA;
     Node* laneB;
@@ -56,6 +58,8 @@ class GameScene : public Layer, public CCBMemberVariableAssigner
     CCBAnimationManager *ccbAnimationManager;
     int maxHeight;
     Sprite* pause;
+    bool pausing;
+    Sprite* pauseSmoke;
 public:
     static Scene* createScene();
     virtual bool init();
@@ -65,13 +69,19 @@ public:
     CREATE_FUNC(GameScene);
     bool onTouchBegan(Touch* touch, Event* event);
     void onTouchEnded(Touch* touch, Event* event);
+
     virtual bool onAssignCCBMemberVariable(Ref* pTarget, const char* pMemberVariableName, Node* pNode);
+    virtual SEL_MenuHandler onResolveCCBCCMenuItemSelector(Ref * pTarget, const char* pSelectorName);
+    virtual Control::Handler onResolveCCBCCControlSelector(Ref * pTarget, const char* pSelectorName);
+
     void update(float dt);
     void checkLevel(float dt);
     void updateManas(float dt);
     void updateBurgers(float dt);
     void spawnMana(Mana* mana);
     void drawScore();
+    void onRetry(Ref* sender, Control::EventType type);
+    void onBack(Ref* sender, Control::EventType type);
 };
 
 class GameSceneLoader : public LayerLoader

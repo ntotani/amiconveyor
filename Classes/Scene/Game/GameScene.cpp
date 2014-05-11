@@ -33,6 +33,8 @@ GameScene::GameScene()
 ,burgers(list<Burger*>())
 ,levels(list<Level>())
 ,currentLevel(Level())
+,pausing(false)
+,pauseSmoke(nullptr)
 {
     for (int i = 0; i < 8; i++) {
         manas.push_back(nullptr);
@@ -116,7 +118,32 @@ bool GameScene::onAssignCCBMemberVariable(Ref* pTarget, const char* pMemberVaria
     }
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "scoreLabel", LabelTTF*, scoreLabel);
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "pause", Sprite*, pause);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "pauseSmoke", Sprite*, pauseSmoke);
     return true;
+}
+
+SEL_MenuHandler GameScene::onResolveCCBCCMenuItemSelector(Ref * pTarget, const char* pSelectorName)
+{
+    return NULL;
+}
+
+Control::Handler GameScene::onResolveCCBCCControlSelector(Ref * pTarget, const char* pSelectorName)
+{
+    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "onRetry", GameScene::onRetry);
+    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "onBack", GameScene::onBack);
+    return NULL;
+}
+
+void GameScene::onRetry(cocos2d::Ref *sender, Control::EventType type)
+{
+    Director::getInstance()->replaceScene(GameScene::createScene());
+}
+
+void GameScene::onBack(cocos2d::Ref *sender, Control::EventType type)
+{
+    pausing = false;
+    ccbAnimationManager->runAnimationsForSequenceNamed("game");
+    SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
 }
 
 void GameScene::initManas()
@@ -131,6 +158,7 @@ void GameScene::initManas()
         manas[i]->addChild(mana);
     }
     drawScore();
+    pauseSmoke->setLocalZOrder(1000);
 
     auto b = Burger::create({0, 1, 2}, false);
     b->addMana(Mana::create(manas[0], 0));
@@ -143,10 +171,15 @@ void GameScene::initManas()
 
 bool GameScene::onTouchBegan(Touch *touch, Event *event)
 {
+    if (pausing) {
+        return false;
+    }
     flickCounter = 0;
     touchBegan = touch->getLocation();
     if (pause->getBoundingBox().containsPoint(touchBegan)) {
-        Director::getInstance()->pushScene(PauseScene::createScene());
+        pausing = true;
+        ccbAnimationManager->runAnimationsForSequenceNamed("pause");
+        SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
         return false;
     }
     for (auto mana : flyingManas) {
@@ -223,6 +256,9 @@ void GameScene::onTouchEnded(Touch* touch, Event* event)
 
 void GameScene::update(float dt)
 {
+    if (pausing) {
+        return;
+    }
     flickCounter += dt;
     checkLevel(dt);
     updateManas(dt);
