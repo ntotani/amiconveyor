@@ -6,6 +6,7 @@
 #include "../../Common/LBAnalytics.h"
 #include "../Game/GameScene.h"
 #include "SimpleAudioEngine.h"
+#include "cocosbuilder/CCNodeLoaderLibrary.h"
 
 USING_NS_CC;
 using namespace CocosDenshion;
@@ -13,7 +14,13 @@ using namespace CocosDenshion;
 static vector<int> manas;
 
 ResultScene::ResultScene()
-:popupShown(false)
+:thumbLayer(nullptr)
+,bg(nullptr)
+,burger(nullptr)
+,message(nullptr)
+,ccbAnimationManager(nullptr)
+,popupShown(false)
+,thumb(nullptr)
 {
 }
 
@@ -24,18 +31,13 @@ ResultScene::~ResultScene()
 Scene* ResultScene::createScene()
 {
     auto scene = Scene::create();
-    ResultScene *pRet = new ResultScene();
-    if (pRet && pRet->init())
-    {
-        pRet->autorelease();
-    }
-    else
-    {
-        delete pRet;
-        pRet = NULL;
-        return NULL;
-    }
-    scene->addChild(pRet);
+    auto nodeLoaderLibrary = NodeLoaderLibrary::getInstance();
+    nodeLoaderLibrary->registerNodeLoader("ResultScene", ResultSceneLoader::loader());
+    auto ccbReader = new CCBReader(nodeLoaderLibrary);
+    ccbReader->autorelease();
+    auto layer = ccbReader->readNodeGraphFromFile("ccbi/ResultScene.ccbi");
+    static_cast<ResultScene*>(layer)->initAfter(ccbReader->getAnimationManager());
+    scene->addChild(layer);
     return scene;
 }
 
@@ -45,6 +47,19 @@ bool ResultScene::init()
     {
         return false;
     }
+    auto dispatcher = Director::getInstance()->getEventDispatcher();
+    auto listener = EventListenerTouchOneByOne::create();
+    listener->onTouchBegan = [](Touch* touch, Event* event) { return true; };
+    listener->onTouchMoved = [](Touch* touch, Event* event) {};
+    listener->onTouchEnded = CC_CALLBACK_2(ResultScene::onTouchEnded, this);
+    listener->onTouchCancelled = [](Touch* touch, Event* event) {};
+    dispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    return true;
+}
+
+void ResultScene::initAfter(CCBAnimationManager* a)
+{
+    ccbAnimationManager = a;
     vector<pair<string, string>> voiceLib = {
         pair<string, string>("fueen", "ふえーん！"),
         pair<string, string>("hiddoi", "ひっどーい！"),
@@ -63,16 +78,12 @@ bool ResultScene::init()
     runAction(Sequence::create(DelayTime::create(3.5), CallFunc::create([voicePath]() {
         SimpleAudioEngine::getInstance()->playEffect(voicePath.c_str());
     }), NULL));
-
+    
     auto vs = Director::getInstance()->getVisibleSize();
-    auto center = Point(vs) / 2;
     auto bgId = voiceId == 7 ? 2 : (rand() % 7) + 1;
     if (voiceId != 7 && bgId == 2) { bgId = 3; }
-    auto bg = Sprite::create(StringUtils::format("img/result_%d.png", bgId));
-    bg->setPosition(center);
-    auto burger = Sprite::create("img/game_bread_under.png");
-    burger->setPosition(Point(100, 100));
-    burger->setRotation(-10);
+    bg->setTexture(StringUtils::format("img/result_%d.png", bgId));
+    burger->addChild(Sprite::create("img/game_bread_under.png"));
     for (int i = 0; i < manas.size(); i++) {
         auto img = StringUtils::format("img/game_mana_%d.png", manas[i]);
         auto mana = Sprite::create(img);
@@ -84,99 +95,67 @@ bool ResultScene::init()
             burger->addChild(bread);
         }
     }
-    thumbLayer = Node::create();
-    thumbLayer->addChild(bg);
-    thumbLayer->addChild(burger);
-    addChild(thumbLayer);
-
-    auto blkout = Sprite::create("img/game_popup_blkout.png");
-    blkout->setPosition(center);
-    blkout->setTag(0);
-    auto popup = Sprite::create("img/game_popup_bg.png");
-    popup->setPosition(center);
-    popup->setTag(1);
-    okBtn = Sprite::create("img/game_popup_button.png");
-    okBtn->setPosition(center - Point(0, (popup->getContentSize().height - okBtn->getContentSize().height) / 2 - 10));
-    auto ok = LabelTTF::create("OK", "", 24);
-    ok->setPosition(Point(okBtn->getContentSize()) / 2);
-    okBtn->addChild(ok);
-    auto frame = Scale9Sprite::create("img/game_recipe.png");
-    //frame->setContentSize(Size(180, 40));
-    //frame->setPosition(btn->getPosition() + Point(-40, 50));
-    frame->setPosition(center - Point(0, 60));
     shout = voice.second;
-    auto message = LabelTTF::create(shout, "", 18);
-    message->setColor(Color3B::BLACK);
-    message->setPosition(Point(frame->getContentSize()) / 2);
-    frame->addChild(message);
-    twBtn = Sprite::create("img/icon_tw.png");
-    twBtn->setPosition(frame->getPosition() + Point(frame->getContentSize().width / 2, -frame->getContentSize().height / 2 - twBtn->getContentSize().height / 2));
-    fbBtn = Sprite::create("img/icon_fb.png");
-    fbBtn->setPosition(twBtn->getPosition() - Point(twBtn->getContentSize().width + fbBtn->getContentSize().width, 0) / 2);
-
-    popupLayer = Node::create();
-    popupLayer->addChild(blkout);
-    popupLayer->addChild(popup);
-    //
+    message->setString(shout);
     auto rt = RenderTexture::create(vs.width, vs.height);
     rt->begin();
     thumbLayer->visit();
     rt->end();
-    rt->setScale(0.35f);
-    rt->setPosition(Point(vs) / 2 + Point(0, 40));
-    popupLayer->addChild(rt);
-    //
-    popupLayer->addChild(frame);
-    popupLayer->addChild(twBtn);
-    popupLayer->addChild(fbBtn);
-    popupLayer->addChild(okBtn);
-    for (auto n : popupLayer->getChildren()) {
-        n->setVisible(false);
-    }
-    addChild(popupLayer);
-
-    auto dispatcher = Director::getInstance()->getEventDispatcher();
-    auto listener = EventListenerTouchOneByOne::create();
-    listener->onTouchBegan = [](Touch* touch, Event* event) { return true; };
-    listener->onTouchMoved = [](Touch* touch, Event* event) {};
-    listener->onTouchEnded = CC_CALLBACK_2(ResultScene::onTouchEnded, this);
-    listener->onTouchCancelled = [](Touch* touch, Event* event) {};
-    dispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-
-    return true;
+    rt->setPosition(Point(thumb->getContentSize()) / 2);
+    thumb->addChild(rt);
 }
 
 void ResultScene::onTouchEnded(Touch* touch, Event* event)
 {
     if (!popupShown) {
         popupShown = true;
-        auto blkout = popupLayer->getChildByTag(0);
-        auto popup = popupLayer->getChildByTag(1);
-        blkout->setVisible(true);
-        popup->setScale(0.0f);
-        popup->setVisible(true);
-        popup->runAction(Sequence::create(ScaleTo::create(0.3f, 1.0f), CallFunc::create([&]() {
-            for (auto n : popupLayer->getChildren()) {
-                n->setVisible(true);
-            }
-        }), NULL));
-        return;
+        ccbAnimationManager->runAnimationsForSequenceNamed("popup");
     }
-    auto p = touch->getLocation();
-    if (okBtn->getBoundingBox().containsPoint(p)) {
-        Director::getInstance()->replaceScene(GameScene::createScene());
-    } else if (twBtn->getBoundingBox().containsPoint(p)) {
-        AppDelegate::screenShot(thumbLayer, "screenshot.jpg", [&](std::string filePath) {
-            LBSocial::tweet((shout + " http://goo.gl/pd1z0L").c_str(), filePath.c_str());
-        });
-    } else if (fbBtn->getBoundingBox().containsPoint(p)) {
-        AppDelegate::screenShot(thumbLayer, "screenshot.jpg", [&](std::string filePath) {
-            LBSocial::facebook((shout + " http://goo.gl/pd1z0L").c_str(), filePath.c_str());
-        });
-    }
+}
+
+bool ResultScene::onAssignCCBMemberVariable(Ref* pTarget, const char* pMemberVariableName, Node* pNode)
+{
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "thumbLayer", Node*, thumbLayer);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "bg", Sprite*, bg);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "burger", Node*, burger);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "message", LabelTTF*, message);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "thumb", Sprite*, thumb);
+    return true;
+}
+
+SEL_MenuHandler ResultScene::onResolveCCBCCMenuItemSelector(Ref * pTarget, const char* pSelectorName)
+{
+    CCB_SELECTORRESOLVER_CCMENUITEM_GLUE(this, "onFacebook", ResultScene::onFacebook);
+    CCB_SELECTORRESOLVER_CCMENUITEM_GLUE(this, "onTwitter", ResultScene::onTwitter);
+    return NULL;
+}
+
+Control::Handler ResultScene::onResolveCCBCCControlSelector(Ref * pTarget, const char* pSelectorName)
+{
+    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "onOk", ResultScene::onOk);
+    return NULL;
 }
 
 void ResultScene::setManas(vector<int> m)
 {
     manas = m;
+}
+
+void ResultScene::onOk(Ref* sender, Control::EventType type)
+{
+    Director::getInstance()->replaceScene(GameScene::createScene());
+}
+
+void ResultScene::onFacebook(Ref* target)
+{
+    AppDelegate::screenShot(thumbLayer, "screenshot.jpg", [&](std::string filePath) {
+        LBSocial::facebook((shout + " http://goo.gl/pd1z0L").c_str(), filePath.c_str());
+    });
+}
+
+void ResultScene::onTwitter(Ref* target)
+{
+    AppDelegate::screenShot(thumbLayer, "screenshot.jpg", [&](std::string filePath) {
+        LBSocial::tweet((shout + " http://goo.gl/pd1z0L").c_str(), filePath.c_str());
+    });
 }
