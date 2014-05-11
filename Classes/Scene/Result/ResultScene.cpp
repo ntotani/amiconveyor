@@ -19,7 +19,6 @@ ResultScene::ResultScene()
 ,burger(nullptr)
 ,message(nullptr)
 ,ccbAnimationManager(nullptr)
-,popupShown(false)
 ,thumb(nullptr)
 {
 }
@@ -57,6 +56,29 @@ bool ResultScene::init()
     return true;
 }
 
+bool ResultScene::onAssignCCBMemberVariable(Ref* pTarget, const char* pMemberVariableName, Node* pNode)
+{
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "thumbLayer", Node*, thumbLayer);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "bg", Sprite*, bg);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "burger", Node*, burger);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "message", LabelTTF*, message);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "thumb", Sprite*, thumb);
+    return true;
+}
+
+SEL_MenuHandler ResultScene::onResolveCCBCCMenuItemSelector(Ref * pTarget, const char* pSelectorName)
+{
+    CCB_SELECTORRESOLVER_CCMENUITEM_GLUE(this, "onFacebook", ResultScene::onFacebook);
+    CCB_SELECTORRESOLVER_CCMENUITEM_GLUE(this, "onTwitter", ResultScene::onTwitter);
+    return NULL;
+}
+
+Control::Handler ResultScene::onResolveCCBCCControlSelector(Ref * pTarget, const char* pSelectorName)
+{
+    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "onOk", ResultScene::onOk);
+    return NULL;
+}
+
 void ResultScene::initAfter(CCBAnimationManager* a)
 {
     ccbAnimationManager = a;
@@ -75,7 +97,7 @@ void ResultScene::initAfter(CCBAnimationManager* a)
     auto voicePath = "sound/voice_" + voice.first + ".wav";
     SimpleAudioEngine::getInstance()->preloadBackgroundMusic(voicePath.c_str());
     SimpleAudioEngine::getInstance()->playBackgroundMusic("sound/all_right!.mp3");
-    runAction(Sequence::create(DelayTime::create(3.5), CallFunc::create([voicePath]() {
+    bg->runAction(Sequence::create(DelayTime::create(3.5), CallFunc::create([voicePath]() {
         SimpleAudioEngine::getInstance()->playEffect(voicePath.c_str());
     }), NULL));
     
@@ -107,33 +129,10 @@ void ResultScene::initAfter(CCBAnimationManager* a)
 
 void ResultScene::onTouchEnded(Touch* touch, Event* event)
 {
-    if (!popupShown && ccbAnimationManager->getRunningSequenceName() != "popup") {
-        popupShown = true;
+    auto now = ccbAnimationManager->getRunningSequenceName();
+    if (now && strcmp(now, "popup") != 0) {
         ccbAnimationManager->runAnimationsForSequenceNamed("popup");
     }
-}
-
-bool ResultScene::onAssignCCBMemberVariable(Ref* pTarget, const char* pMemberVariableName, Node* pNode)
-{
-    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "thumbLayer", Node*, thumbLayer);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "bg", Sprite*, bg);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "burger", Node*, burger);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "message", LabelTTF*, message);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "thumb", Sprite*, thumb);
-    return true;
-}
-
-SEL_MenuHandler ResultScene::onResolveCCBCCMenuItemSelector(Ref * pTarget, const char* pSelectorName)
-{
-    CCB_SELECTORRESOLVER_CCMENUITEM_GLUE(this, "onFacebook", ResultScene::onFacebook);
-    CCB_SELECTORRESOLVER_CCMENUITEM_GLUE(this, "onTwitter", ResultScene::onTwitter);
-    return NULL;
-}
-
-Control::Handler ResultScene::onResolveCCBCCControlSelector(Ref * pTarget, const char* pSelectorName)
-{
-    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "onOk", ResultScene::onOk);
-    return NULL;
 }
 
 void ResultScene::setManas(vector<int> m)

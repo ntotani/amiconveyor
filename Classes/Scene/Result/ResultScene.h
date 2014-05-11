@@ -20,8 +20,6 @@ class ResultScene : public Layer, public CCBMemberVariableAssigner, public CCBSe
     LabelTTF* message;
     CCBAnimationManager *ccbAnimationManager;
     Sprite* thumb;
-
-    bool popupShown;
     string shout;
 public:
     ResultScene();
