@@ -23,7 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import net.uracon.gsweeper.R;
+import net.uracon.burgerflicker.R;
 
 public class FacebookActivity extends ActionBarActivity {
 

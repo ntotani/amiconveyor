@@ -3,9 +3,9 @@ package org.cocos2dx.cpp;
 import java.io.File;
 import java.util.Hashtable;
 
-import net.uracon.gsweeper.BuildConfig;
+import net.uracon.burgerflicker.BuildConfig;
 import jp.co.septeni.original.leadblow.FacebookActivity;
-import net.uracon.gsweeper.R;
+import net.uracon.burgerflicker.R;
 import jp.co.septeni.original.leadblow.billing.IabHelper;
 import jp.co.septeni.original.leadblow.billing.IabHelper.OnIabPurchaseFinishedListener;
 import jp.co.septeni.original.leadblow.billing.Purchase;
