@@ -189,3 +189,14 @@ Rect Burger::getBound() const
     auto bb = getBoundingBox();
     return Rect(bb.getMinX(), bb.getMinY(), bb.size.width, bb.size.height + len * 7);
 }
+
+int Burger::nextColor() const
+{
+    if (isPotato) {
+        return 6;
+    }
+    if (manas.size() >= correctColors.size()) {
+        return -1;
+    }
+    return correctColors[manas.size()];
+}

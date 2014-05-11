@@ -210,22 +210,10 @@ void GameScene::onTouchEnded(Touch* touch, Event* event)
     }
     auto touchEnd = touch->getLocation();
     auto dir = (touchEnd - touchBegan).normalize();
-    auto ab = dir * 1000;
-    auto l = ab.getLength();
     auto vel = dir * 100 / flickCounter;
     for (auto mana : flyingManas) {
         if (mana->getBound().containsPoint(touchBegan - mana->home->getPosition()) && mana->velocity == Point::ZERO) {
-
-            float minH = 10000;
-            for (auto b : burgers) {
-                auto ap = b->getPosition() - touchBegan;
-                auto h = abs(ab.cross(ap) / l);
-                if (h < minH) {
-                    minH = h;
-                    mana->prefBurger = b->burgerId;
-                }
-            }
-
+            mana->prefBurger = getPrefBurger(dir, mana->color);
             mana->velocity = vel;
             mana->setScale(1);
             mana->setPosition(mana->home->getPosition());
@@ -248,22 +236,32 @@ void GameScene::onTouchEnded(Touch* touch, Event* event)
             auto mana = b->popMana(this);
             mana->setPosition(touchBegan);
             mana->velocity = vel;
-
-            float minH = 10000;
-            for (auto bb : burgers) {
-                auto ap = bb->getPosition() - touchBegan;
-                auto h = abs(ab.cross(ap) / l);
-                if (h < minH && bb->burgerId != b->burgerId) {
-                    minH = h;
-                    mana->prefBurger = bb->burgerId;
-                }
-            }
-
+            mana->prefBurger = getPrefBurger(dir, mana->color, b->burgerId);
             flyingManas.push_back(mana);
             SimpleAudioEngine::getInstance()->playEffect("sound/se_flick.mp3");
             break;
         }
     }
+}
+
+int GameScene::getPrefBurger(const Point& dir, int manaColor, int expBurgerId) const
+{
+    auto ab = dir * 1000;
+    auto l = ab.getLength();
+    int prefBurger = -1;
+    float minScore = 2000000;
+    for (auto b : burgers) {
+        auto ap = b->getPosition() - touchBegan;
+        float dist = max(ab.cross(ap), ap.cross(ab)) / l;
+        int correct = b->nextColor() == manaColor ? 0 : 1000000;
+        float left = b->getPositionX() * 1000;
+        float score = correct + left + dist;
+        if (score < minScore && dist < 70 && b->burgerId != expBurgerId) {
+            minScore = score;
+            prefBurger = b->burgerId;
+        }
+    }
+    return prefBurger;
 }
 
 void GameScene::update(float dt)

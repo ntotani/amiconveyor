@@ -84,6 +84,7 @@ public:
     void drawScore();
     void onRetry(Ref* sender, Control::EventType type);
     void onBack(Ref* sender, Control::EventType type);
+    int getPrefBurger(const Point& dir, int manaColor, int expBurgerId = -1) const;
 };
 
 class GameSceneLoader : public LayerLoader
