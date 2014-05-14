@@ -32,9 +32,9 @@
               
               {"delta":150, "lane":1, "speed":15, "potato":15},
               
-              {"delta":20, "height":4, "speed":60, "freq":3, "lane":1},
+              {"delta":30, "height":4, "speed":60, "freq":3, "lane":1},
               
-              {"delta":70, "lane":1, "speed":10, "potato":7},
+              {"delta":80, "lane":1, "speed":10, "potato":7},
               {"delta":120, "speed":10, "potato":10},
               {"delta":150, "lane":1, "speed":10, "potato":20},
               
