@@ -2448,9 +2448,11 @@
 										<key>type</key>
 										<string>Text</string>
 										<key>value</key>
-										<string>HELP</string>
+										<string>PAUSE</string>
 									</dict>
 								</array>
+								<key>selected</key>
+								<true/>
 							</dict>
 							<dict>
 								<key>baseClass</key>
