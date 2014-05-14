@@ -22,11 +22,11 @@
               
               {"delta":20,"speed":10,"potato":5},
               
-              {"delta":10, "height":15, "speed":15, "freq":20, "lane":1},
+              {"delta":5, "height":15, "speed":10, "freq":20, "lane":1},
               
-              {"delta":30, "lane":1, "potato":10},
+              {"delta":100,"speed":15, "potato":10},
               
-              {"delta":40, "height":2, "speed":50, "freq":3},
+              {"delta":40, "height":2, "speed":30, "freq":3},
               {"delta":80, "height":3, "speed":50, "freq":4, "lane":1},
               {"delta":120, "height":4, "speed":60, "freq":4, "lane":1},
               
