@@ -151,17 +151,17 @@ void Burger::jet()
     popup->runAction(Spawn::create(ScaleTo::create(0.2f, 0), MoveBy::create(0.2f, Point(0, popup->getContentSize().height / 2)), NULL));
     auto visibleSize = Director::getInstance()->getVisibleSize();
     auto to = nextPoint();
-    auto from = Point(to.x, visibleSize.height - getPositionY());
+    auto from = Point(to.x, visibleSize.height);
 
     auto bread = Sprite::create("img/game_bread.png");
     bread->setPosition(from);
-    bread->runAction(MoveTo::create(0.2f, to));
+    bread->runAction(MoveTo::create(0.1f, to));
     auto lid = Sprite::create("img/game_lid.png");
     lid->setPosition(from);
-    lid->runAction(Sequence::create(DelayTime::create(0.1f), MoveTo::create(0.2f, to), NULL));
+    lid->runAction(Sequence::create(DelayTime::create(0.2f), MoveTo::create(0.2f, to), NULL));
     auto comp = Sprite::create("img/game_compseal.png");
     comp->setPosition(from);
-    comp->runAction(Sequence::create(DelayTime::create(0.2f), MoveTo::create(0.2f, to), NULL));
+    comp->runAction(Sequence::create(DelayTime::create(0.3f), MoveTo::create(0.2f, to + Point(0, 20)), NULL));
     if (!isPotato) addChild(bread);
     addChild(lid);
     addChild(comp);
