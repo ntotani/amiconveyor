@@ -5,6 +5,7 @@
 #include "../Result/ResultScene.h"
 #include "spine/Json.h"
 #include "../Pause/PauseScene.h"
+#include "../../Common/GamePlatform.h"
 
 //#define BGM "sound/Super_Gamer_Boy_offvocal.mp3"
 #define BGM "sound/Vigour.mp3"
@@ -40,6 +41,7 @@ GameScene::GameScene()
 ,highScoreLabel(nullptr)
 ,onPotato(false)
 ,onLane(false)
+,crown(nullptr)
 {
     for (int i = 0; i < 8; i++) {
         manas.push_back(nullptr);
@@ -131,6 +133,7 @@ bool GameScene::onAssignCCBMemberVariable(Ref* pTarget, const char* pMemberVaria
     }
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "scoreLabel", LabelTTF*, scoreLabel);
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "pause", Sprite*, pause);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "crown", Sprite*, crown);
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "pauseSmoke", Sprite*, pauseSmoke);
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "highScoreLabel", LabelTTF*, highScoreLabel);
     return true;
@@ -195,6 +198,10 @@ bool GameScene::onTouchBegan(Touch *touch, Event *event)
         pausing = true;
         ccbAnimationManager->runAnimationsForSequenceNamed("pause");
         SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+        return false;
+    }
+    if (crown->getBoundingBox().containsPoint(touchBegan)) {
+        GamePlatform::show();
         return false;
     }
     for (auto mana : flyingManas) {
@@ -399,6 +406,7 @@ void GameScene::updateBurgers(float dt)
             if (score > highScore) {
                 UserDefault::getInstance()->setIntegerForKey(HIGH_SCORE, score);
                 UserDefault::getInstance()->flush();
+                GamePlatform::reportScore(highScore);
             }
             Director::getInstance()->replaceScene(ResultScene::createScene());
             it = burgers.erase(it);

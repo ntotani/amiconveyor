@@ -64,6 +64,7 @@ class GameScene : public Layer, public CCBMemberVariableAssigner, public CCBSele
     vector<Sprite*> rollersB;
     bool onPotato;
     bool onLane;
+    Sprite* crown;
 public:
     static Scene* createScene();
     virtual bool init();
