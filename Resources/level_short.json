@@ -1,0 +1,19 @@
+{
+    "coolDown":0,
+    "events":[
+              {"delta":0,  "height":2, "speed":30, "freq":5},
+              {"delta":10, "height":4, "speed":30, "freq":5,  "memo":"高さが増える"},
+              {"delta":15, "height":4, "speed":30, "freq":3,  "memo":"頻度が増える"},
+              {"delta":15, "height":4, "speed":30, "freq":10, "memo":"一呼吸置いて"},
+              {"delta":10, "height":4, "speed":60, "freq":3,  "memo":"すげー速くなる"},
+              {"delta":15, "height":4, "speed":40, "freq":8,  "memo":"一呼吸置いて"},
+  {"potato":5, "delta":8,  "height":5, "speed":40, "freq":3,  "memo":"ポテト登場"},
+              {"delta":15, "height":5, "speed":40, "freq":8,  "memo":"一呼吸置いて"},
+              {"delta":8,  "height":6, "speed":60, "freq":4,  "memo":"超速くなる"},
+    {"lane":1, "delta":12, "height":6, "speed":60, "freq":4,  "memo":"さらにレーン追加"},
+              {"delta":12, "height":6, "speed":60, "freq":8,  "memo":"一呼吸置いて"},
+              {"delta":8,  "height":10,"speed":10, "freq":3,  "memo":"巨大タワー出現"},
+              {"delta":15, "height":10,"speed":10, "freq":30, "memo":"一呼吸置いて"},
+ {"potato":15, "delta":30, "height":10,"speed":20, "freq":7,  "memo":"ラスボス"}
+    ]
+}

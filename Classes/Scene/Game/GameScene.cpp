@@ -26,7 +26,7 @@ GameScene::GameScene()
 ,levelCounter(0)
 ,flickCounter(0)
 ,touchBegan(Point::ZERO)
-,spawnCounter(3)
+,spawnCounter(0)
 ,coolDown(0.5f)
 ,tutorial(true)
 ,ccbAnimationManager(nullptr)
@@ -38,6 +38,8 @@ GameScene::GameScene()
 ,pauseSmoke(nullptr)
 ,highScore(0)
 ,highScoreLabel(nullptr)
+,onPotato(false)
+,onLane(false)
 {
     for (int i = 0; i < 8; i++) {
         manas.push_back(nullptr);
@@ -83,7 +85,10 @@ bool GameScene::init()
     SimpleAudioEngine::getInstance()->preloadEffect("sound/se_ob.mp3");
     SimpleAudioEngine::getInstance()->preloadEffect("sound/se_ok.mp3");
 
-    auto str = FileUtils::getInstance()->getStringFromFile("level.json");
+    highScore = UserDefault::getInstance()->getIntegerForKey(HIGH_SCORE, 0);
+    auto levelFile = highScore > 0 && rnd->next() % 2 == 0 ? "level.json" : "level_short.json";
+
+    auto str = FileUtils::getInstance()->getStringFromFile(levelFile);
     auto json = Json_create(str.c_str());
     coolDown = Json_getFloat(json, "coolDown", 0.5f);
     auto events = Json_getItem(json, "events");
@@ -99,8 +104,6 @@ bool GameScene::init()
         levels.push_back(l);
         it = it->next;
     }
-    checkLevel(0);
-    spawnCounter = currentLevel.freq;
 
     auto dispatcher = Director::getInstance()->getEventDispatcher();
     auto listener = EventListenerTouchOneByOne::create();
@@ -177,7 +180,6 @@ void GameScene::initManas()
     b->setPositionX(Director::getInstance()->getVisibleSize().width / 2);
     addChild(b);
     burgers.push_back(b);
-    highScore = UserDefault::getInstance()->getIntegerForKey(HIGH_SCORE, 0);
     highScoreLabel->setString(StringUtils::format("%04d", highScore));
 }
 
@@ -281,7 +283,7 @@ void GameScene::update(float dt)
         spawnCounter = currentLevel.freq;
         vector<int> correctColors;
         bool isPotato = false;
-        if (currentLevel.potatoNum > 0 && rnd->next() % 8 == 6) {
+        if (currentLevel.potatoNum > 0 && (rnd->next() % 8 == 6 || onPotato)) {
             isPotato = true;
             for (int i = 0; i < currentLevel.potatoNum; i++) {
                 correctColors.push_back(6);
@@ -292,7 +294,7 @@ void GameScene::update(float dt)
             }
         }
         auto b = Burger::create(correctColors, isPotato);
-        auto lane = currentLevel.lane && rnd->next() % 2 == 0 ? laneB : laneA;
+        auto lane = currentLevel.lane && (rnd->next() % 2 == 0 || onLane) ? laneB : laneA;
         b->setPosition(lane->getPosition());
         addChild(b);
         burgers.push_back(b);
@@ -301,6 +303,7 @@ void GameScene::update(float dt)
             bb->setLocalZOrder(order);
             order--;
         }
+        onPotato = onLane = false;
     }
     for (auto r : rollersA) {
         r->setRotation(r->getRotation() - 2 * currentLevel.speed * dt);
@@ -327,6 +330,12 @@ void GameScene::checkLevel(float dt)
         currentLevel.potatoNum = nextLevel.potatoNum > 0 ? nextLevel.potatoNum : currentLevel.potatoNum;
         currentLevel.lane |= nextLevel.lane;
         levels.pop_front();
+        if (nextLevel.potatoNum > 0) {
+            onPotato = true;
+        }
+        if (nextLevel.lane) {
+            onLane = true;
+        }
     }
 }
 

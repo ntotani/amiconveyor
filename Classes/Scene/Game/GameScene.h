@@ -62,6 +62,8 @@ class GameScene : public Layer, public CCBMemberVariableAssigner, public CCBSele
     LabelTTF* highScoreLabel;
     vector<Sprite*> rollersA;
     vector<Sprite*> rollersB;
+    bool onPotato;
+    bool onLane;
 public:
     static Scene* createScene();
     virtual bool init();
