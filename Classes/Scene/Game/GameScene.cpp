@@ -84,6 +84,7 @@ bool GameScene::init()
     SimpleAudioEngine::getInstance()->preloadEffect("sound/se_ng.mp3");
     SimpleAudioEngine::getInstance()->preloadEffect("sound/se_ob.mp3");
     SimpleAudioEngine::getInstance()->preloadEffect("sound/se_ok.mp3");
+    SimpleAudioEngine::getInstance()->preloadEffect("sound/se_jet.mp3");
 
     highScore = UserDefault::getInstance()->getIntegerForKey(HIGH_SCORE, 0);
     auto levelFile = highScore > 0 && rnd->next() % 2 == 0 ? "level.json" : "level_short.json";
@@ -378,6 +379,7 @@ void GameScene::updateBurgers(float dt)
         }
         if (burger->validate()) {
             burger->jet();
+            SimpleAudioEngine::getInstance()->playEffect("sound/se_jet.mp3");
             score++;
             drawScore();
             if (burger->correctColors.size() > maxHeight) {
