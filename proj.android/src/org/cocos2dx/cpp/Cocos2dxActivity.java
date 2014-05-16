@@ -96,7 +96,7 @@ public class Cocos2dxActivity extends NativeActivity{
                 showBoardOnSignIn = false;
                 int highScore = getSharedPreferences("Cocos2dxPrefsFile", 0).getInt("highScore", -1);
                 if (highScore > 0) {
-                    Games.Leaderboards.submitScore(gameHelper.getApiClient(), "CgkI7LrTpPUJEAIQAQ", highScore);
+                    Games.Leaderboards.submitScore(gameHelper.getApiClient(), "CgkIwtW_sf8aEAIQBg", highScore);
                 }
             }
             @Override
@@ -377,13 +377,13 @@ public class Cocos2dxActivity extends NativeActivity{
 	}
 
   private void showLeaderBoard() {
-      Intent intent = Games.Leaderboards.getLeaderboardIntent(gameHelper.getApiClient(), "CgkI7LrTpPUJEAIQAQ");
+      Intent intent = Games.Leaderboards.getLeaderboardIntent(gameHelper.getApiClient(), "CgkIwtW_sf8aEAIQBg");
       startActivityForResult(intent, LEADERBOARD_REQUEST_CODE);
   }
 
   public static void reportScore(int score) {
       if (that.gameHelper.isSignedIn()) {
-          Games.Leaderboards.submitScore(that.gameHelper.getApiClient(), "CgkI7LrTpPUJEAIQAQ", score);
+          Games.Leaderboards.submitScore(that.gameHelper.getApiClient(), "CgkIwtW_sf8aEAIQBg", score);
       }
   }
 
