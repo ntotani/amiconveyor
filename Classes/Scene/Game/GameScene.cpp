@@ -406,7 +406,7 @@ void GameScene::updateBurgers(float dt)
             if (score > highScore) {
                 UserDefault::getInstance()->setIntegerForKey(HIGH_SCORE, score);
                 UserDefault::getInstance()->flush();
-                GamePlatform::reportScore(highScore);
+                GamePlatform::reportScore(score);
             }
             Director::getInstance()->replaceScene(ResultScene::createScene());
             it = burgers.erase(it);
