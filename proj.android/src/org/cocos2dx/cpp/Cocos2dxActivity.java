@@ -167,6 +167,7 @@ public class Cocos2dxActivity extends NativeActivity{
 
     @Override
     public void onPause() {
+        hideAdView();
         if (adView != null) {
             adView.pause();
         }
@@ -176,7 +177,6 @@ public class Cocos2dxActivity extends NativeActivity{
     @Override
     public void onStop() {
         super.onStop();
-        hideAdView();
         FlurryAgent.onEndSession(this);
         gameHelper.onStop();
     }
