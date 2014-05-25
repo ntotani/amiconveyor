@@ -42,6 +42,8 @@ GameScene::GameScene()
 ,onPotato(false)
 ,onLane(false)
 ,crown(nullptr)
+,burgersLayer(nullptr)
+,flyingManasLayer(nullptr)
 {
     for (int i = 0; i < 8; i++) {
         manas.push_back(nullptr);
@@ -136,6 +138,8 @@ bool GameScene::onAssignCCBMemberVariable(Ref* pTarget, const char* pMemberVaria
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "crown", Sprite*, crown);
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "pauseSmoke", Sprite*, pauseSmoke);
     CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "highScoreLabel", LabelTTF*, highScoreLabel);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "burgersLayer", Layer*, burgersLayer);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "flyingManasLayer", Layer*, flyingManasLayer);
     return true;
 }
 
@@ -182,7 +186,7 @@ void GameScene::initManas()
     b->addMana(Mana::create(manas[1], 1));
     b->setPosition(laneA->getPosition());
     b->setPositionX(Director::getInstance()->getVisibleSize().width / 2);
-    addChild(b);
+    burgersLayer->addChild(b);
     burgers.push_back(b);
     highScoreLabel->setString(StringUtils::format("%04d", highScore));
 }
@@ -229,7 +233,7 @@ void GameScene::onTouchEnded(Touch* touch, Event* event)
             mana->setPosition(mana->home->getPosition());
             mana->retain();
             mana->removeFromParent();
-            addChild(mana, 100);
+            flyingManasLayer->addChild(mana);
             mana->release();
             auto reload = Mana::create(mana->home, mana->color);
             spawnMana(reload);
@@ -304,7 +308,7 @@ void GameScene::update(float dt)
         auto b = Burger::create(correctColors, isPotato);
         auto lane = currentLevel.lane && (rnd->next() % 2 == 0 || onLane) ? laneB : laneA;
         b->setPosition(lane->getPosition());
-        addChild(b);
+        burgersLayer->addChild(b);
         burgers.push_back(b);
         int order = burgers.size();
         for (auto bb : burgers) {

@@ -65,6 +65,8 @@ class GameScene : public Layer, public CCBMemberVariableAssigner, public CCBSele
     bool onPotato;
     bool onLane;
     Sprite* crown;
+    Layer* burgersLayer;
+    Layer* flyingManasLayer;
 public:
     static Scene* createScene();
     virtual bool init();
