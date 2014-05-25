@@ -247,7 +247,7 @@ void GameScene::onTouchEnded(Touch* touch, Event* event)
             if (b->manas.empty()) {
                 continue;
             }
-            auto mana = b->popMana(this);
+            auto mana = b->popMana(flyingManasLayer);
             mana->setPosition(touchBegan);
             mana->velocity = vel;
             mana->prefBurger = getPrefBurger(dir, mana->color, b->burgerId);
